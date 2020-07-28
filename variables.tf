@@ -59,3 +59,14 @@ variable "access_key" {}
 variable "secret_key" {}
 variable "ssh_key_name" {}
 variable "certificate_arn" {}
+
+variable "cloudflare_api_token" {
+  description = "Setting the Cloudflare API Token enables automatic DNS updates for things like setting TXT records for domain verification and assigning a domain to an ALB."
+  default = ""
+}
+
+variable "default_domain" {}
+
+variable "default_mx_records" {
+  default = []
+}

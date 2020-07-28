@@ -1,9 +1,14 @@
 # terraform-templates
 
-**WIP** [Terraform][terraform] templates for use with [AWS][aws], presently sets
-up a VPC with 2 availability zones, private and public subnets, internet gateway,
-security groups, a single AZ bastion host and an auto-scaling apache/php7.4
-service behind an application load-balancer with SSL.
+**WIP** [Terraform][terraform] templates for use with [AWS][aws], presently creates:
+
+- a VPC with 2 availability zones
+- private and public subnets in each availability zone
+- internet gateway
+- security groups
+- a single AZ bastion host
+- an auto-scaling apache/php7.4 service behind an ALB with SSL
+- dns management for setting SES DKIM keys in Cloudflare
 
 ## Quick Start
 
@@ -16,8 +21,29 @@ service behind an application load-balancer with SSL.
    region = "eu-west-2"
    ssh_key_name = ""
    certificate_arn = ""
+   default_domain = "domain.com"
+
+   # optional: https://dash.cloudflare.com/profile/api-tokens
+   cloudflare_api_token = ""
    ```
 1. Execute `terraform apply` to generate the environment.
+
+## Required Reading for AWS Accounts with Existing Resources
+
+**default_domain**
+
+Terraform will attept to create the specified domain in SES. If the domain
+already exists, users **must** import it into their Terraform config by
+executing `terraform import aws_ses_domain_identity.default "domain.com"`.
+
+**cloudflare_api_token**
+
+Setting the Cloudflare API Token is an optional but recommended step. Terraform
+will attempt to create the zone automatically and manage DNS entries for things
+such as DKIM verification. If the domain already exists, users **must** import
+it into their Terraform config by executing `terraform import cloudflare_zone.default "Zone ID"`
+where `Zone ID` is available via the Cloudflare Overview page for the domain in
+question.
 
 ## Useful Commands
 
