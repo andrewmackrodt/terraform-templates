@@ -1,0 +1,31 @@
+#cloud-config
+apt_update: true
+packages:
+  # common packages
+  - acl
+  - ca-certificates
+  - curl
+  - git
+  - htop
+  - iftop
+  - iotop
+  - locales
+  - net-tools
+  - nfs-common
+  - software-properties-common
+  - strace
+  - traceroute
+  - tzdata
+  - vim
+  - wget
+  - unzip
+package_reboot_if_required: true
+package_upgrade: true
+runcmd:
+  # base system locale
+  - locale-gen en_US en_US.UTF-8
+  - dpkg-reconfigure locales
+  - update-locale LANG=en_US.UTF-8
+  # base system umask
+  - sed -i -E 's/^(UMASK[ \t]+).+/\1''002/' /etc/login.defs
+timezone: Europe/London

@@ -1,0 +1,77 @@
+#cloud-config
+apt_update: true
+packages:
+  # common packages
+  - acl
+  - ca-certificates
+  - curl
+  - git
+  - htop
+  - iftop
+  - iotop
+  - locales
+  - net-tools
+  - nfs-common
+  - software-properties-common
+  - strace
+  - traceroute
+  - tzdata
+  - vim
+  - wget
+  - unzip
+  # php
+  - php7.4-bcmath
+  - php7.4-bz2
+  - php7.4-cli
+  - php7.4-common
+  - php7.4-curl
+  - php7.4-dev
+  - php7.4-gd
+  - php7.4-gmp
+  - php7.4-imap
+  - php7.4-intl
+  - php7.4-json
+  - php7.4-mbstring
+  - php7.4-mysql
+  - php7.4-opcache
+  - php7.4-pgsql
+  - php7.4-readline
+  - php7.4-soap
+  - php7.4-sqlite3
+  - php7.4-xml
+  - php7.4-xsl
+  - php7.4-zip
+  # apache
+  - apache2
+  - apache2-utils
+  - libapache2-mod-php7.4
+package_reboot_if_required: true
+package_upgrade: true
+runcmd:
+  # base system locale
+  - locale-gen en_US en_US.UTF-8
+  - dpkg-reconfigure locales
+  - update-locale LANG=en_US.UTF-8
+  # base system umask
+  - sed -i -E 's/^(UMASK[ \t]+).+/\1''002/' /etc/login.defs
+  # php.ini
+  - sed -i -E 's/^;?date.timezone.+/date.timezone = Europe\/London/' /etc/php/7.4/apache2/php.ini
+  - sed -i -E 's/^;?memory_limit.+/memory_limit = 256M/' /etc/php/7.4/apache2/php.ini
+  - sed -i -E 's/^;?post_max_size.+/post_max_size = 100M/' /etc/php/7.4/apache2/php.ini
+  - sed -i -E 's/^;?upload_max_filesize.+/upload_max_filesize = 100M/' /etc/php/7.4/apache2/php.ini
+  # composer
+  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  - HOME=/root php composer-setup.php
+  - mv composer.phar /usr/local/bin
+  - ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
+  # apache modules
+  - a2enmod headers
+  - a2enmod rewrite
+  # apache umask
+  - usermod -a -G www-data ubuntu
+  - /bin/echo -e ".include $(systemctl show -p FragmentPath apache2 | sed -E 's/^[^=]+=//')\n\n[Service]\nUMask=002" > /etc/systemd/system/apache2.service
+  - systemctl daemon-reload
+  # apache restart
+  - systemctl stop apache2 || true
+  - systemctl start apache2
+timezone: Europe/London
