@@ -2,14 +2,6 @@ variable "cidr" {
   default = "10.0.0.0/16"
 }
 
-variable "availability_zones" {
-  default = [
-    "eu-west-2a",
-    "eu-west-2b",
-    "eu-west-2c",
-  ]
-}
-
 variable "availability_zone_count" {
   default = 2
 }

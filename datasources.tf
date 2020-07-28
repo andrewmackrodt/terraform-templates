@@ -13,3 +13,6 @@ data "aws_ami" "ubuntu-focal" {
   }
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}

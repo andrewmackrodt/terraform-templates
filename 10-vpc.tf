@@ -7,7 +7,7 @@ module "vpc" {
   cidr = var.cidr
 
   # availability zones (default: ["eu-west-2a", "eu-west-2b"])
-  azs = slice(var.availability_zones, 0, var.availability_zone_count)
+  azs = slice(data.aws_availability_zones.available.names, 0, var.availability_zone_count)
 
   # public subnets (default: ["10.0.0.0/22", "10.0.4.0/22"])
   public_subnets  = slice(var.public_subnets, 0, var.availability_zone_count)
