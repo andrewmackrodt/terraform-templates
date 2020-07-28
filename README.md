@@ -8,6 +8,7 @@
 - security groups
 - a single AZ bastion host
 - an auto-scaling apache/php7.4 service behind an ALB with SSL
+- dns management for setting ACM validation keys in Cloudflare
 - dns management for setting SES DKIM keys in Cloudflare
 
 ## Quick Start
@@ -32,7 +33,11 @@
 
 **default_domain**
 
-Terraform will attept to create the specified domain in SES. If the domain
+Terraform will attempt to create the specified domain in ACM. If the domain
+already exists, users **may** import it into their Terraform config by
+executing `terraform import aws_acm_certificate.default "arn:aws:acm:________"`.
+
+Terraform will attempt to create the specified domain in SES. If the domain
 already exists, users **must** import it into their Terraform config by
 executing `terraform import aws_ses_domain_identity.default "domain.com"`.
 

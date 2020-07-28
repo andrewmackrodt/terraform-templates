@@ -10,7 +10,7 @@ resource "cloudflare_zone" "default" {
 
 resource "cloudflare_record" "default_mx_records" {
   count    = var.cloudflare_api_token != "" ? length(var.default_mx_records) : 0
-  zone_id  = cloudflare_zone.default[0].id
+  zone_id  = cloudflare_zone.default.0.id
   name     = var.default_domain
   type     = "MX"
   value    = element(var.default_mx_records, count.index).value

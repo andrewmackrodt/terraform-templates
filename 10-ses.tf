@@ -4,20 +4,21 @@ resource "aws_ses_domain_identity" "default" {
 
 resource "cloudflare_record" "default_ses_verification" {
   count    = var.cloudflare_api_token != "" ? 1 : 0
-  zone_id  = cloudflare_zone.default[0].id
+  zone_id  = cloudflare_zone.default.0.id
   type     = "TXT"
   name     = "_amazonses"
   value    = aws_ses_domain_identity.default.verification_token
 }
 
 resource "aws_ses_domain_identity_verification" "default" {
-  count  = var.cloudflare_api_token != "" ? 1 : 0
-  domain = aws_ses_domain_identity.default.domain
+  count      = var.cloudflare_api_token != "" ? 1 : 0
+  domain     = aws_ses_domain_identity.default.domain
+  depends_on = [cloudflare_record.default_ses_verification]
 }
 
 resource "aws_ses_domain_dkim" "default" {
   count  = var.cloudflare_api_token != "" ? 1 : 0
-  domain = aws_ses_domain_identity_verification.default[0].domain
+  domain = aws_ses_domain_identity_verification.default.0.domain
 }
 
 resource "cloudflare_record" "default_ses_dkim" {
@@ -28,8 +29,8 @@ resource "cloudflare_record" "default_ses_dkim" {
   #count   = length(aws_ses_domain_dkim.default.dkim_tokens)
 
   count   = var.cloudflare_api_token != "" ? 3 : 0
-  zone_id = cloudflare_zone.default[0].id
+  zone_id = cloudflare_zone.default.0.id
   type    = "CNAME"
-  name    = "${element(aws_ses_domain_dkim.default[0].dkim_tokens, count.index)}._domainkey"
-  value   = "${element(aws_ses_domain_dkim.default[0].dkim_tokens, count.index)}.dkim.amazonses.com"
+  name    = "${element(aws_ses_domain_dkim.default.0.dkim_tokens, count.index)}._domainkey"
+  value   = "${element(aws_ses_domain_dkim.default.0.dkim_tokens, count.index)}.dkim.amazonses.com"
 }

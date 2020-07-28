@@ -52,7 +52,7 @@ module "php_apache_alb" {
 
   https_listeners = [
     {
-      certificate_arn    = var.certificate_arn
+      certificate_arn    = aws_acm_certificate_validation.default.0.certificate_arn
       protocol           = "HTTPS"
       port               = 443
       target_group_index = 0
