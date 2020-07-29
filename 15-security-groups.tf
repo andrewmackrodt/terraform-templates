@@ -1,5 +1,5 @@
 resource "aws_security_group" "bastion" {
-  name   = "${var.name}-bastion-sg"
+  name   = "bastion-sg"
   vpc_id = module.vpc.vpc_id
 
   ingress {
@@ -19,12 +19,12 @@ resource "aws_security_group" "bastion" {
   }
 
   tags = merge(local.common_tags, {
-    Name = "${var.name}-public-bastion-sg"
+    Name = "bastion-sg"
   })
 }
 
 resource "aws_security_group" "public_alb" {
-  name   = "${var.name}-public-alb-sg"
+  name   = "public-alb-sg"
   vpc_id = module.vpc.vpc_id
 
   ingress {
@@ -60,16 +60,16 @@ resource "aws_security_group" "public_alb" {
   }
 
   tags = merge(local.common_tags, {
-    Name = "${var.name}-public-alb-sg"
+    Name = "public-alb-sg"
   })
 }
 
 resource "aws_security_group" "private_web" {
-  name   = "${var.name}-private-web-sg"
+  name   = "private-web-sg"
   vpc_id = module.vpc.vpc_id
 
   ingress {
-    description     = "Allow ssh from public bastion"
+    description     = "Allow ssh from private bastion"
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
@@ -101,6 +101,6 @@ resource "aws_security_group" "private_web" {
   }
 
   tags = merge(local.common_tags, {
-    Name = "${var.name}-private-web-sg"
+    Name = "private-web-sg"
   })
 }

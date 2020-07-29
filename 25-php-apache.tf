@@ -2,7 +2,7 @@ module "php_apache_alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 5.0"
 
-  name               = "${var.name}-php-apache-alb"
+  name               = "php-apache-alb"
   load_balancer_type = "application"
   vpc_id             = module.vpc.vpc_id
   subnets            = module.vpc.public_subnets
@@ -18,7 +18,7 @@ module "php_apache_alb" {
 
   target_groups = [
     {
-      name                 = "${var.name}-php-apache-tg"
+      name                 = "php-apache-tg"
       backend_protocol     = "HTTP"
       backend_port         = 80
       target_type          = "instance"
@@ -66,7 +66,7 @@ module "php_apache_asg" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "~> 3.0"
 
-  name          = "${var.name}-php-apache"
+  name          = "php-apache"
   image_id      = compact([var.default_ami_id, data.aws_ami.ubuntu-focal.id])[0]
   instance_type = var.default_instance_type
   key_name      = var.ssh_key_name
@@ -83,7 +83,7 @@ module "php_apache_asg" {
   ]
 
   # auto scaling group
-  asg_name                  = "${var.name}-php-apache-asg"
+  asg_name                  = "php-apache-asg"
   vpc_zone_identifier       = module.vpc.private_subnets
   health_check_type         = "ELB"
   min_size                  = 2

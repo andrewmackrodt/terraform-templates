@@ -6,7 +6,7 @@
 - private and public subnets in each availability zone
 - internet gateway
 - security groups
-- a single AZ bastion host
+- bastion host to access private network
 - an auto-scaling apache/php7.4 service behind an ALB with SSL
 - dns management for setting ACM validation keys in Cloudflare
 - dns management for setting SES DKIM keys in Cloudflare
