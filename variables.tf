@@ -64,6 +64,10 @@ variable "bastion_ssh_key_name" {
   default = ""
 }
 
+variable "bastion_subdomain" {
+  default = ""
+}
+
 variable "access_key" {}
 variable "secret_key" {}
 variable "ssh_key_name" {}

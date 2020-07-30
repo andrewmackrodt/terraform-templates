@@ -32,14 +32,22 @@ module "bastion_nlb" {
   tags = local.common_tags
 }
 
+resource "cloudflare_record" "bastion" {
+  count   = var.bastion_subdomain != "" ? 1 : 0
+  zone_id = cloudflare_zone.default.0.id
+  type    = "CNAME"
+  name    = var.bastion_subdomain
+  value   = module.bastion_nlb.this_lb_dns_name
+}
+
 module "bastion_asg" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "~> 3.0"
 
   name          = "bastion"
   image_id      = compact([var.default_ami_id, data.aws_ami.ubuntu-focal.id])[0]
-  instance_type = var.default_instance_type
-  key_name      = var.ssh_key_name
+  instance_type = compact([var.bastion_instance_type, var.default_instance_type])[0]
+  key_name      = compact([var.bastion_ssh_key_name, var.ssh_key_name])[0]
 
   security_groups = [
     aws_security_group.bastion.id,
