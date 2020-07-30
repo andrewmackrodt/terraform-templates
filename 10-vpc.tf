@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source = "git::https://github.com/andrewmackrodt/terraform-aws-vpc.git"
 
   name = var.name
 
@@ -29,6 +29,13 @@ module "vpc" {
 
   # vpn gateway
   enable_vpn_gateway = true
+
+  # resource name customization
+  internet_gateway_suffix = "igw"
+  nat_gateway_suffix = "nat"
+  route_table_suffix = "rt"
+  vpn_gateway_suffix = "vpn"
+  numeric_az_tags = true
 
   # resource tags
   tags = local.common_tags

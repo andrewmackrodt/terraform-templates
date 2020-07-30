@@ -21,7 +21,6 @@
    secret_key = ""
    region = "eu-west-2"
    ssh_key_name = ""
-   certificate_arn = ""
    default_domain = "domain.com"
 
    # optional: https://dash.cloudflare.com/profile/api-tokens
