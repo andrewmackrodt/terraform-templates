@@ -55,7 +55,7 @@ module "bastion_asg" {
   # auto scaling group
   asg_name                  = "bastion-asg"
   vpc_zone_identifier       = module.vpc.private_subnets
-  health_check_type         = "ELB"
+  health_check_type         = "EC2"
   min_size                  = 1
   max_size                  = 1
   desired_capacity          = 1
