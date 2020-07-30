@@ -2,12 +2,15 @@ resource "aws_security_group" "bastion" {
   name   = "bastion-sg"
   vpc_id = module.vpc.vpc_id
 
-  ingress {
-    description = "Allow ssh from any"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "ingress" {
+    for_each = var.bastion_cidr_blocks
+    content {
+      description = "Allow ssh from ${ingress.value.description}"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = [ingress.value.value]
+    }
   }
 
   egress {

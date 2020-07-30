@@ -47,6 +47,15 @@ variable "bastion_ami_id" {
   default = ""
 }
 
+variable "bastion_cidr_blocks" {
+  default = [
+    {
+      description = "any"
+      value = "0.0.0.0/0"
+    }
+  ]
+}
+
 variable "bastion_instance_type" {
   default = ""
 }
